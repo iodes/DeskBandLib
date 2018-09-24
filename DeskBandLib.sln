@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeskBandLib", "DeskBandLib\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeskBandLib.Sample", "DeskBandLib.Sample\DeskBandLib.Sample.csproj", "{4559D72C-CB75-4F81-A739-63B8B8B315E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeskBandLib.Support", "DeskBandLib.Support\DeskBandLib.Support.csproj", "{F035ED3E-C956-44FE-A13B-4F7F9E9C9C13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4559D72C-CB75-4F81-A739-63B8B8B315E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4559D72C-CB75-4F81-A739-63B8B8B315E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4559D72C-CB75-4F81-A739-63B8B8B315E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F035ED3E-C956-44FE-A13B-4F7F9E9C9C13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F035ED3E-C956-44FE-A13B-4F7F9E9C9C13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F035ED3E-C956-44FE-A13B-4F7F9E9C9C13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F035ED3E-C956-44FE-A13B-4F7F9E9C9C13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
