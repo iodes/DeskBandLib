@@ -6,7 +6,7 @@ namespace DeskBandLib.Interop
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("012DD920-7B26-11D0-8CA9-00A0C92DBFE8")]
-    public interface IDockingWindow : IOleWindow
+    interface IDockingWindow : IOleWindow
     {
         #region IOleWindow
         [PreserveSig]

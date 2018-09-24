@@ -17,7 +17,8 @@ namespace DeskBandLib
         #endregion
 
         #region Variables
-        protected IInputObjectSite DeskBandSite;
+        private uint _deskBandId;
+        private IInputObjectSite _deskBandSite;
         #endregion
 
         #region Properties
@@ -93,15 +94,15 @@ namespace DeskBandLib
         #region IObjectWithSite
         public void SetSite([In, MarshalAs(UnmanagedType.IUnknown)] object pUnkSite)
         {
-            if (DeskBandSite != null)
-                Marshal.ReleaseComObject(DeskBandSite);
+            if (_deskBandSite != null)
+                Marshal.ReleaseComObject(_deskBandSite);
 
-            DeskBandSite = (IInputObjectSite)pUnkSite;
+            _deskBandSite = (IInputObjectSite)pUnkSite;
         }
 
         public void GetSite(ref Guid riid, [MarshalAs(UnmanagedType.IUnknown)] out object ppvSite)
         {
-            ppvSite = DeskBandSite;
+            ppvSite = _deskBandSite;
         }
         #endregion
 
@@ -126,6 +127,8 @@ namespace DeskBandLib
 
         public int GetBandInfo(uint dwBandID, DESKBANDINFO.DBIF dwViewMode, ref DESKBANDINFO pdbi)
         {
+            _deskBandId = dwBandID;
+
             if (pdbi.dwMask.HasFlag(DESKBANDINFO.DBIM.DBIM_MINSIZE))
             {
                 if (dwViewMode.HasFlag(DESKBANDINFO.DBIF.DBIF_VIEWMODE_FLOATING) || dwViewMode.HasFlag(DESKBANDINFO.DBIF.DBIF_VIEWMODE_VERTICAL))
@@ -296,6 +299,17 @@ namespace DeskBandLib
             else
             {
                 Console.WriteLine(guid + " has no attributes");
+            }
+        }
+        #endregion
+
+        #region Public Methods
+        public void HideDeskBand()
+        {
+            if (_deskBandSite != null)
+            {
+                var bandSite = _deskBandSite as IBandSite;
+                bandSite.RemoveBand(_deskBandId);
             }
         }
         #endregion

@@ -53,7 +53,9 @@
     <Compile Include="DeskBand.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Interop\BANDSITEINFO.cs" />
     <Compile Include="Interop\COLORREF.cs" />
+    <Compile Include="Interop\COM\IBandSite.cs" />
     <Compile Include="Interop\COM\IDeskBand.cs" />
     <Compile Include="Interop\COM\IDeskBand2.cs" />
     <Compile Include="Interop\COM\IDockingWindow.cs" />

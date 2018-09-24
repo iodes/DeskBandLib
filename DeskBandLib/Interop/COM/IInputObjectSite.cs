@@ -9,7 +9,7 @@ namespace DeskBandLib.Interop
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("F1DB8392-7331-11D0-8C99-00A0C92DBFE8")]
-    public interface IInputObjectSite
+    interface IInputObjectSite
     {
         /// <summary>
         /// Informs the browser that the focus has changed.

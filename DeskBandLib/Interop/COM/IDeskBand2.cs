@@ -9,7 +9,7 @@ namespace DeskBandLib.Interop
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("79D16DE4-ABEE-4021-8D9D-9169B261D657")]
-    public interface IDeskBand2 : IDeskBand
+    interface IDeskBand2 : IDeskBand
     {
         #region IOleWindow
         [PreserveSig]
