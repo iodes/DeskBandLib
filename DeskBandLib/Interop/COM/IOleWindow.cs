@@ -9,7 +9,7 @@ namespace DeskBandLib.Interop
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("00000114-0000-0000-C000-000000000046")]
-    interface IOleWindow
+    public interface IOleWindow
     {
         /// <summary>
         /// Retrieves a handle to one of the windows participating in in-place activation (frame, document, parent, or in-place object window).

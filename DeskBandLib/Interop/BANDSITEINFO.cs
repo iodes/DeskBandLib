@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace DeskBandLib.Interop
 {
     [StructLayout(LayoutKind.Sequential)]
-    struct BANDSITEINFO
+    public struct BANDSITEINFO
     {
         public BSIM dwMask;
         public BSSF dwState;

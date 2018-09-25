@@ -16,12 +16,17 @@ namespace DeskBandLib
         private const int E_NOTIMPL = unchecked((int)0x80004001);
         #endregion
 
-        #region Variables
-        private uint _deskBandId;
-        private IInputObjectSite _deskBandSite;
-        #endregion
-
         #region Properties
+        /// <summary>
+        /// Gets the ID of the current DeskBand.
+        /// </summary>
+        protected uint DeskBandID { get; private set; }
+
+        /// <summary>
+        /// Gets the Site of the current DeskBand.
+        /// </summary>
+        protected IInputObjectSite DeskBandSite { get; private set; }
+
         /// <summary>
         /// Title of the band object, displayed by default on the left or top of the object.
         /// </summary>
@@ -91,43 +96,48 @@ namespace DeskBandLib
         }
         #endregion
 
-        #region IObjectWithSite
-        public void SetSite([In, MarshalAs(UnmanagedType.IUnknown)] object pUnkSite)
-        {
-            if (_deskBandSite != null)
-                Marshal.ReleaseComObject(_deskBandSite);
+        #region Implements
 
-            _deskBandSite = (IInputObjectSite)pUnkSite;
-        }
-
-        public void GetSite(ref Guid riid, [MarshalAs(UnmanagedType.IUnknown)] out object ppvSite)
+        #region Methods
+        private int GetWindowImpl(out IntPtr phwnd)
         {
-            ppvSite = _deskBandSite;
-        }
-        #endregion
-
-        #region IDeskBand2
-        public virtual int CanRenderComposited(out bool pfCanRenderComposited)
-        {
-            pfCanRenderComposited = true;
+            phwnd = Handle;
             return S_OK;
         }
 
-        public int SetCompositionState(bool fCompositionEnabled)
+        private int ContextSensitiveHelpImpl(bool fEnterMode)
         {
-            fCompositionEnabled = true;
             return S_OK;
         }
 
-        public int GetCompositionState(out bool pfCompositionEnabled)
+        private int ShowDWImpl(bool fShow)
         {
-            pfCompositionEnabled = false;
+            if (fShow)
+            {
+                Show();
+            }
+            else
+            {
+                Hide();
+            }
+
             return S_OK;
         }
 
-        public int GetBandInfo(uint dwBandID, DESKBANDINFO.DBIF dwViewMode, ref DESKBANDINFO pdbi)
+        private int CloseDWImpl(uint dwReserved)
         {
-            _deskBandId = dwBandID;
+            Dispose(true);
+            return S_OK;
+        }
+
+        private int ResizeBorderDWImpl(RECT prcBorder, IntPtr punkToolbarSite, bool fReserved)
+        {
+            return E_NOTIMPL;
+        }
+
+        private int GetBandInfoImpl(uint dwBandID, DESKBANDINFO.DBIF dwViewMode, ref DESKBANDINFO pdbi)
+        {
+            DeskBandID = dwBandID;
 
             if (pdbi.dwMask.HasFlag(DESKBANDINFO.DBIM.DBIM_MINSIZE))
             {
@@ -200,40 +210,160 @@ namespace DeskBandLib
             return S_OK;
         }
 
-        public int GetWindow(out IntPtr phwnd)
+        private int CanRenderCompositedImpl(out bool pfCanRenderComposited)
         {
-            phwnd = Handle;
+            pfCanRenderComposited = true;
             return S_OK;
         }
 
-        public int ContextSensitiveHelp(bool fEnterMode)
+        private int SetCompositionStateImpl(bool fCompositionEnabled)
         {
             return S_OK;
         }
 
-        public int ShowDW([In] bool fShow)
+        private int GetCompositionState(out bool pfCompositionEnabled)
         {
-            if (fShow)
-                Show();
-            else
-                Hide();
-
+            pfCompositionEnabled = false;
             return S_OK;
-        }
-
-        public int CloseDW([In] uint dwReserved)
-        {
-            Dispose(true);
-            return S_OK;
-        }
-
-        public int ResizeBorderDW(RECT prcBorder, [In, MarshalAs(UnmanagedType.IUnknown)] IntPtr punkToolbarSite, bool fReserved)
-        {
-            return E_NOTIMPL;
         }
         #endregion
 
-        #region Register / Unregister
+        #region IObjectWithSite
+        void IObjectWithSite.SetSite(object pUnkSite)
+        {
+            if (DeskBandSite != null)
+                Marshal.ReleaseComObject(DeskBandSite);
+
+            DeskBandSite = (IInputObjectSite)pUnkSite;
+        }
+
+        void IObjectWithSite.GetSite(ref Guid riid, out object ppvSite)
+        {
+            ppvSite = DeskBandSite;
+        }
+        #endregion
+
+        #region IOleWindow
+        int IOleWindow.GetWindow(out IntPtr phwnd)
+        {
+            return GetWindowImpl(out phwnd);
+        }
+
+        int IOleWindow.ContextSensitiveHelp(bool fEnterMode)
+        {
+            return ContextSensitiveHelpImpl(fEnterMode);
+        }
+        #endregion
+
+        #region IDockingWindow
+        int IDockingWindow.GetWindow(out IntPtr phwnd)
+        {
+            return GetWindowImpl(out phwnd);
+        }
+
+        int IDockingWindow.ContextSensitiveHelp(bool fEnterMode)
+        {
+            return ContextSensitiveHelpImpl(fEnterMode);
+        }
+
+        int IDockingWindow.ShowDW(bool fShow)
+        {
+            return ShowDWImpl(fShow);
+        }
+
+        int IDockingWindow.CloseDW(uint dwReserved)
+        {
+            return CloseDWImpl(dwReserved);
+        }
+
+        int IDockingWindow.ResizeBorderDW(RECT prcBorder, IntPtr punkToolbarSite, bool fReserved)
+        {
+            return ResizeBorderDWImpl(prcBorder, punkToolbarSite, fReserved);
+        }
+        #endregion
+
+        #region IDeskBand
+        int IDeskBand.GetWindow(out IntPtr phwnd)
+        {
+            return GetWindowImpl(out phwnd);
+        }
+
+        int IDeskBand.ContextSensitiveHelp(bool fEnterMode)
+        {
+            return ContextSensitiveHelpImpl(fEnterMode);
+        }
+
+        int IDeskBand.ShowDW(bool fShow)
+        {
+            return ShowDWImpl(fShow);
+        }
+
+        int IDeskBand.CloseDW(uint dwReserved)
+        {
+            return CloseDWImpl(dwReserved);
+        }
+
+        int IDeskBand.ResizeBorderDW(RECT prcBorder, IntPtr punkToolbarSite, bool fReserved)
+        {
+            return ResizeBorderDWImpl(prcBorder, punkToolbarSite, fReserved);
+        }
+
+        int IDeskBand.GetBandInfo(uint dwBandID, DESKBANDINFO.DBIF dwViewMode, ref DESKBANDINFO pdbi)
+        {
+            return GetBandInfoImpl(dwBandID, dwViewMode, ref pdbi);
+        }
+        #endregion
+
+        #region IDeskBand2
+        int IDeskBand2.GetWindow(out IntPtr phwnd)
+        {
+            return GetWindowImpl(out phwnd);
+        }
+
+        int IDeskBand2.ContextSensitiveHelp(bool fEnterMode)
+        {
+            return ContextSensitiveHelpImpl(fEnterMode);
+        }
+
+        int IDeskBand2.ShowDW(bool fShow)
+        {
+            return ShowDWImpl(fShow);
+        }
+
+        int IDeskBand2.CloseDW(uint dwReserved)
+        {
+            return CloseDWImpl(dwReserved);
+        }
+
+        int IDeskBand2.ResizeBorderDW(RECT prcBorder, IntPtr punkToolbarSite, bool fReserved)
+        {
+            return ResizeBorderDWImpl(prcBorder, punkToolbarSite, fReserved);
+        }
+
+        int IDeskBand2.GetBandInfo(uint dwBandID, DESKBANDINFO.DBIF dwViewMode, ref DESKBANDINFO pdbi)
+        {
+            return GetBandInfoImpl(dwBandID, dwViewMode, ref pdbi);
+        }
+
+        int IDeskBand2.CanRenderComposited(out bool pfCanRenderComposited)
+        {
+            return CanRenderCompositedImpl(out pfCanRenderComposited);
+        }
+
+        int IDeskBand2.SetCompositionState(bool fCompositionEnabled)
+        {
+            return SetCompositionStateImpl(fCompositionEnabled);
+        }
+
+        int IDeskBand2.GetCompositionState(out bool pfCompositionEnabled)
+        {
+            return GetCompositionState(out pfCompositionEnabled);
+        }
+        #endregion
+
+        #endregion
+
+        #region COM Methods
         [ComRegisterFunction]
         public static void Register(Type t)
         {
@@ -241,7 +371,6 @@ namespace DeskBandLib
 
             var deskBandInfo = t.GetCustomAttributes(typeof(DeskBandInfoAttribute), false) as DeskBandInfoAttribute[];
 
-            // Register only the extension if the attribute DeskBandInfo is used.
             if (deskBandInfo.Length == 1)
             {
                 var rkClass = Registry.ClassesRoot.CreateSubKey(@"CLSID\" + guid);
@@ -265,7 +394,6 @@ namespace DeskBandLib
                 rkClass.SetValue("MenuText", _displayName);
                 rkClass.SetValue("HelpText", _helpText);
 
-                // TaskBar
                 rkCat.CreateSubKey("{00021492-0000-0000-C000-000000000046}");
 
                 Console.WriteLine(string.Format("{0} {1} {2}", guid, _displayName, "successfully registered."));
@@ -304,12 +432,15 @@ namespace DeskBandLib
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Hide the current DeskBand from the taskbar.
+        /// </summary>
         public void HideDeskBand()
         {
-            if (_deskBandSite != null)
+            if (DeskBandSite != null)
             {
-                var bandSite = _deskBandSite as IBandSite;
-                bandSite.RemoveBand(_deskBandId);
+                var bandSite = DeskBandSite as IBandSite;
+                bandSite.RemoveBand(DeskBandID);
             }
         }
         #endregion

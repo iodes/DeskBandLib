@@ -9,7 +9,7 @@ namespace DeskBandLib.Interop
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("FC4801A3-2BA9-11CF-A229-00AA003D7352")]
-    interface IObjectWithSite
+    public interface IObjectWithSite
     {
         /// <summary>
         /// Enables a container to pass an object a pointer to the interface for its site.

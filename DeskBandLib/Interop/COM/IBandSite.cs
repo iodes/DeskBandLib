@@ -9,7 +9,7 @@ namespace DeskBandLib.Interop
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("4CF504B0-DE96-11D0-8B3F-00A0C911E8E5")]
-    interface IBandSite
+    public interface IBandSite
     {
         /// <summary>
         /// Adds a band to a band site object.
